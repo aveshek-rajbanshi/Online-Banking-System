@@ -22,6 +22,7 @@ public class OnlineBankingSystem{
         try{
             Connection conn = DriverManager.getConnection(url, username, password);
 
+            OnlineBankingSystem Nabil = new OnlineBankingSystem();
             Scanner scanner = new Scanner(System.in);
             User user = new User(conn, scanner);
             Account account = new Account(conn, scanner);
@@ -77,11 +78,12 @@ public class OnlineBankingSystem{
                             System.out.println("\n>>  User Not Found!!");
                         }
                         break;
-                    case 3:
+                    case 0:
                         System.out.println();
-                        System.out.println("  Thank You for Visiting Online Nabil ATM platform,");
-                        System.out.println("  Have a Wonderful & Nice Day ahead.");
-                        System.out.println("  System Exiting.");
+                        System.out.println("Thank You for Visiting Online Nabil Bank platform,");
+                        System.out.println("Have a Wonderful & Nice Day ahead.");
+                        System.out.print("System Exiting");
+                        Nabil.systemExisting();
                         break;
                     default:
                         System.out.println("\n>>  Please enter a valid choice!!");
@@ -94,5 +96,17 @@ public class OnlineBankingSystem{
             System.out.println(e.getMessage());
         }
 
+    }
+    public void systemExisting() {
+        int i = 5;
+        while (i != 0) {
+            System.out.print(".");
+            try {
+                Thread.sleep(450);
+            } catch (InterruptedException e) {
+                e.printStackTrace(); // handling the interruption
+            }
+            i--;
+        }
     }
 }
