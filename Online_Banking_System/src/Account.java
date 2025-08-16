@@ -19,7 +19,7 @@ public class Account {
         System.out.print("Enter Your Balance: ");
         Double balance = scanner.nextDouble();
         System.out.print("Enter Your Security Pin: ");
-        int securityPIN = scanner.nextInt();
+        String securityPIN = scanner.next();
         scanner.nextLine();
 
         String userAccount_Query = "INSERT INTO account(fullName, email, balance, security_pin) VALUES(?, ?, ?, ?);";
@@ -28,7 +28,7 @@ public class Account {
             preparedStmt.setString(1, fullName);
             preparedStmt.setString(2, userEmail);
             preparedStmt.setDouble(3, balance);
-            preparedStmt.setInt(4, securityPIN);
+            preparedStmt.setString(4, securityPIN);
             int rowAffected = preparedStmt.executeUpdate();
             if(rowAffected > 0){
                 System.out.println("\n>>  Hi! "+fullName+", Your Account Created Successfully.");

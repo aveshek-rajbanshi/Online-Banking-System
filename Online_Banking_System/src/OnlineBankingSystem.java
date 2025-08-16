@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
+import java.util.Set;
 
 public class OnlineBankingSystem{
 
@@ -26,15 +27,16 @@ public class OnlineBankingSystem{
             Scanner scanner = new Scanner(System.in);
             User user = new User(conn, scanner);
             Account account = new Account(conn, scanner);
-            Operation operation = new Operation(conn, scanner);
+            Setting setting = new Setting(conn, scanner);
+            Operation operation = new Operation(conn, scanner, setting);
 
             String userEmail = "";
             int choice1;
             do {
-                System.out.println("\n****  Welcome to Online Nabil Bank Ltd.  ****");
-                System.out.println("\t\t\t 1. Register");
-                System.out.println("\t\t\t 2. Login");
-                System.out.println("\t\t\t 0. Exit");
+                System.out.println("\n****  Welcome to Online Nabil Bank Ltd.  ****\n");
+                System.out.println("\t\t\t\t 1. Register");
+                System.out.println("\t\t\t\t 2. Login");
+                System.out.println("\t\t\t\t 0. Exit");
                 System.out.print("\n--> Enter your choice: ");
                 choice1 = scanner.nextInt();
 
@@ -50,7 +52,7 @@ public class OnlineBankingSystem{
                             if (!account.account_exist(userEmail)) {
                                 int choice2;
                                 do {
-                                    System.out.println("\n**** Welcome to Nabil Bank Ltd. ****");
+                                    System.out.println("\n**** Welcome to Nabil Bank Ltd. ****\n");
                                     System.out.println("\t 1. Create an Account");
                                     System.out.println("\t 2. Logout");
                                     System.out.print("\n--> Enter your choice: ");
@@ -61,7 +63,7 @@ public class OnlineBankingSystem{
                                         //Getting user account number.
                                         BigInteger getUserAccountNumber = account.getAccount_Number(userEmail);
                                         //After creating account instantly get access to Atm Functionality.
-                                        operation.atmOperation(getUserAccountNumber);
+                                        operation.atmOperation(getUserAccountNumber, userEmail);
                                     }else if(choice2 == 2){
                                         break;
                                     }else{
@@ -72,10 +74,10 @@ public class OnlineBankingSystem{
                                 //Getting user account number.
                                 BigInteger getUserAccountNumber = account.getAccount_Number(userEmail);
                                 //if user have an account already.
-                                operation.atmOperation(getUserAccountNumber);
+                                operation.atmOperation(getUserAccountNumber, userEmail);
                             }
                         }else{
-                            System.out.println("\n>>  User Not Found!!");
+                            System.out.println("\n>>  Incorrect UserEmail and Password.");
                         }
                         break;
                     case 0:

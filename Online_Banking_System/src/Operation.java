@@ -5,19 +5,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.Set;
 
-public class Operation {
+public class Operation{
     private final Scanner scanner;
     private final Connection conn;
+    private final Setting setting;
     private BigInteger userAccountNumber = BigInteger.ZERO;
+    private String userEmail;
 
-    public Operation(Connection conn, Scanner scanner){
+    public Operation(Connection conn, Scanner scanner, Setting setting){
         this.conn = conn;
         this.scanner = scanner;
+        this.setting = setting;
     }
 
-    public void atmOperation(BigInteger userAccountNumber){
+    public void atmOperation(BigInteger userAccountNumber, String userEmail){
         this.userAccountNumber = userAccountNumber;
+        this.userEmail = userEmail;
+
 
             int choice3;
             do {
@@ -26,7 +32,8 @@ public class Operation {
                 System.out.println("\t\t 2. Credit Balance");
                 System.out.println("\t\t 3. Transfer Balance");
                 System.out.println("\t\t 4. Check Balance");
-                System.out.println("\t\t 5. Logout");
+                System.out.println("\t\t 5. Setting");
+                System.out.println("\t\t 6. Logout");
                 System.out.println();
                 System.out.print("--> Enter your choice: ");
                 choice3 = scanner.nextInt();
@@ -45,12 +52,43 @@ public class Operation {
                         checkBalance(userAccountNumber);
                         break;
                     case 5:
+                        int settingChoice;
+                        do {
+                            System.out.println("\n*****  Settings  *****");
+                            System.out.println("\t1. My Profile");
+                            System.out.println("\t2. Change Password");
+                            System.out.println("\t3. Change Security PIN");
+                            System.out.println("\t0. Back");
+                            System.out.println();
+                            System.out.print("--> Enter your choice: ");
+                            settingChoice = scanner.nextInt();
+                            scanner.nextLine();  // consume newline
+
+                            switch (settingChoice) {
+                                case 1:
+                                    setting.myDetails(userEmail);
+                                    break;
+                                case 2:
+                                    setting.changePassword(userEmail);
+                                    break;
+                                case 3:
+                                    setting.changeSecurity_Pin(userEmail);
+                                    break;
+                                case 0:
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice. Please! enter correct choice.");
+                                    break;
+                            }
+                        } while (settingChoice != 0);
+                    break;
+                    case 6:
                         break;
                     default:
                         System.out.println("\n>>  Invalid Input. Please! enter valid choice.");
                         break;
                 }
-            }while (choice3 != 5);
+            }while (choice3 != 6);
 
     }
 
@@ -61,7 +99,7 @@ public class Operation {
         Double withdrawAmount = scanner.nextDouble();
         scanner.nextLine();
         System.out.println("Enter Your Security PIN: ");
-        int securityPIN = scanner.nextInt();
+        String securityPIN = scanner.next();
         scanner.nextLine();
 
         try{
@@ -71,7 +109,7 @@ public class Operation {
             conn.setAutoCommit(false);
             PreparedStatement selectStatement = conn.prepareStatement(userAccount_query);
             selectStatement.setLong(1, userAccountNumber.longValue());
-            selectStatement.setInt(2, securityPIN);
+            selectStatement.setString(2, securityPIN);
             ResultSet rs = selectStatement.executeQuery();
             if(rs.next()){
                 Double currentBalance = rs.getDouble("balance");
@@ -116,7 +154,7 @@ public class Operation {
         Double depositeAmount = scanner.nextDouble();
         scanner.nextLine();
         System.out.print("Enter Your Security PIN: ");
-        int securityPIN = scanner.nextInt();
+        String securityPIN = scanner.next();
         scanner.nextLine();
 
         try{
@@ -126,7 +164,7 @@ public class Operation {
             conn.setAutoCommit(false);
             PreparedStatement selectStatement = conn.prepareStatement(userAccount_query);
             selectStatement.setLong(1, userAccountNumber.longValue());
-            selectStatement.setInt(2, securityPIN);
+            selectStatement.setString(2, securityPIN);
             ResultSet rs = selectStatement.executeQuery();
             if(rs.next()){
                 if(depositeAmount >= 0){
@@ -177,7 +215,7 @@ public class Operation {
         Double transferAmount = scanner.nextDouble();
         scanner.nextLine();
         System.out.print("Enter Security PIN: ");
-        int securityPIN = scanner.nextInt();
+        String securityPIN = scanner.next();
         scanner.nextLine();
 
         try{
